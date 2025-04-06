@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getFullPokedexNumber, getPokedexNumber } from '../Utlis';
 import TypeCard from './TypeCard';
+import Modal from './Modal';
 
 //'selectedPokemon' ma chai pokemon ko order anusar 'NUMBER' aauxa
 const PokeCard = (props) => {
@@ -9,6 +10,10 @@ const PokeCard = (props) => {
   // For TYPE 1 fetching data
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  // For MODAL (to show-hide modal) , "skill:true => show modal" or dont show
+  const [skill, setSkill] = useState(null);
+  const [loadingSkill, setLoadingSkill] = useState(false);
 
   // destructuring datas information from TYPE 1 API call
   const { name, height, abilities, stats, types, moves, sprites } = data || {};
@@ -79,6 +84,50 @@ const PokeCard = (props) => {
     //2.3  If we fetch from the API, make sure to save the inforamtion to the cache for next time
   }, [selectedPokemon]);
 
+  // TYPE 2: Fetching the 'moves data' from the API without useEffect() when the user clicks on the 'moves button' to display the skill
+  const fetchMoveData = async (move, moveUrl) => {
+    if (loadingSkill || !localStorage || !moveUrl) {
+      return;
+    }
+
+    let c = {};
+    if (localStorage.getItem('pokemon-moves')) {
+      c = JSON.parse(localStorage.getItem('pokemon-moves'));
+    }
+
+    if (move in c) {
+      setSkill(c[move]);
+      console.log('Found moves in cache');
+      return;
+    }
+
+    try {
+      setLoadingSkill(true);
+
+      const res = await fetch(moveUrl);
+      const moveData = await res.json();
+      console.log('Fetched moves from API', moveData);
+
+      const description = moveData?.flavour_text_entries.filter((val) => {
+        return (val.version_group.name = 'firered-leafgreen');
+      })[0].flavour_text;
+
+      //Data finally GET gare paxiobject ko form ma transform gareko
+      const skillData = {
+        name: move,
+        description,
+      };
+
+      setSkill(skillData);
+      c[move] = skillData;
+      localStorage.setItem('pokemon-moves', JSON.stringify(c));
+    } catch (error) {
+      console.log('Error is encountered', error.message);
+    } finally {
+      setLoadingSkill(false);
+    }
+  };
+
   if (loading || !data) {
     return (
       <img
@@ -131,10 +180,9 @@ const PokeCard = (props) => {
         <div className='stats-card'>
           {stats.map((statObj, statIndex) => {
             const { base_stat, stat } = statObj;
-
             return (
               <div key={statIndex} className='stat-item'>
-                <p>{stat?.name.replaceAll('-', '')}</p>
+                <p>{stat?.name.replaceAll('-', ' ')}</p>
                 <h4>{base_stat}</h4>
               </div>
             );
@@ -142,6 +190,41 @@ const PokeCard = (props) => {
         </div>
 
         {/* ------------------------MOVES + MODAL--------------------------- */}
+        <h3>Moves</h3>
+        <div className='pokemon-move-grid'>
+          {/* <Modal></Modal> bhitra ko jati pani html xa aba as a children props pass hunxa <Modal/> component ma */}
+          {skill && (
+            <Modal
+              handleCloseModal={() => {
+                setSkill(null);
+              }}
+            >
+              <div>
+                <h6>Name</h6>
+                <h2></h2>
+              </div>
+
+              <div>
+                <h6>Description</h6>
+                <h2>dcscds</h2>
+              </div>
+            </Modal>
+          )}
+
+          {moves.map((moveObj, moveIndex) => {
+            return (
+              <button
+                key={moveIndex}
+                className='button-card pokemon-move'
+                onClick={() => {
+                  fetchMoveData(moveObj?.move?.name, moveObj?.move?.url);
+                }}
+              >
+                <p> {moveObj?.move?.name.replaceAll('-', ' ')}</p>
+              </button>
+            );
+          })}
+        </div>
       </div>
     </>
   );

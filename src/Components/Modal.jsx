@@ -7,13 +7,30 @@ Modal use garna paila ma index.html ma  id="root" ko tala
 
 */
 
-import React from 'react';
+/*
+How this
+  "return ReactDom.createPortal(
+    <div className='modal-container'></div>,
+    document.getElementById('portal')
+  ); " works is:
 
-const Modal = () => {
-  return (
-    <>
-      <div>Modal</div>
-    </>
+  First find the <div> with ID of "portal" and inject
+  "<div className='modal-container'></div>" inside it.
+ */
+
+import React from 'react';
+import ReactDom from 'react-dom';
+
+const Modal = (props) => {
+  const { children, handleCloseModal } = props;
+
+  return ReactDom.createPortal(
+    <div className='modal-container'>
+      {/* underUnderlay chai modal bahira ko empty space jaha chai click garda modal close hunxa */}
+      <button onClick={handleCloseModal} className='modal-underlay' />
+      <div className='modal-content'>{children}</div>
+    </div>,
+    document.getElementById('portal')
   );
 };
 
