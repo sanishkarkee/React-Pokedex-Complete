@@ -9,10 +9,13 @@ function App() {
   return (
     <>
       <Header />
+
       <SideNav
         selectedPokemon={selectedPokemon}
         setSelectedPokemon={setSelectedPokemon}
       />
+
+      {/* selectedPokemon ko number le matrai kun pokemon show garne decide hunxa */}
       <PokeCard selectedPokemon={selectedPokemon} />
     </>
   );
