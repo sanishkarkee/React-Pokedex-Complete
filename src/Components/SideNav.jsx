@@ -15,7 +15,16 @@ const SideNav = (props) => {
 
         {first151Pokemon.map((pokemon, pokemonIndex) => {
           return (
-            <button className={'nav-card'} key={pokemonIndex}>
+            <button
+              key={pokemonIndex}
+              className={
+                'nav-card' +
+                (pokemonIndex === selectedPokemon ? 'nav-card-selected' : '')
+              }
+              onClick={() => {
+                setSelectedPokemon(pokemonIndex);
+              }}
+            >
               {getFullPokedexNumber(pokemonIndex)} {'   '}
               {pokemon}
             </button>
