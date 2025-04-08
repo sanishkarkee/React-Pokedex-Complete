@@ -108,9 +108,9 @@ const PokeCard = (props) => {
       const moveData = await res.json();
       console.log('Fetched moves from API', moveData);
 
-      const description = moveData?.flavour_text_entries.filter((val) => {
+      const description = moveData?.flavor_text_entries.filter((val) => {
         return (val.version_group.name = 'firered-leafgreen');
-      })[0].flavour_text;
+      })[0].flavor_text;
 
       //Data finally GET gare paxiobject ko form ma transform gareko
       const skillData = {
@@ -201,12 +201,12 @@ const PokeCard = (props) => {
             >
               <div>
                 <h6>Name</h6>
-                <h2></h2>
+                <h2>{skill.name}</h2>
               </div>
 
               <div>
                 <h6>Description</h6>
-                <h2>dcscds</h2>
+                <h2>{skill.description}</h2>
               </div>
             </Modal>
           )}
