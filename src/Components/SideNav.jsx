@@ -1,7 +1,9 @@
 import React from 'react';
 import { first151Pokemon, getFullPokedexNumber } from '../Utlis';
 
-const SideNav = () => {
+const SideNav = (props) => {
+  const { selectedPokemon, setSelectedPokemon } = props;
+
   return (
     <>
       <nav>
