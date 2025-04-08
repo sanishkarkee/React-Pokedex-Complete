@@ -1,7 +1,9 @@
 import React from 'react';
 import { first151Pokemon, getFullPokedexNumber } from '../Utlis';
 
-const SideNav = () => {
+const SideNav = (props) => {
+  const { selectedPokemon, setSelectedPokemon } = props;
+
   return (
     <>
       <nav>
@@ -13,7 +15,16 @@ const SideNav = () => {
 
         {first151Pokemon.map((pokemon, pokemonIndex) => {
           return (
-            <button className={'nav-card'} key={pokemonIndex}>
+            <button
+              key={pokemonIndex}
+              className={
+                'nav-card' +
+                (pokemonIndex === selectedPokemon ? 'nav-card-selected' : '')
+              }
+              onClick={() => {
+                setSelectedPokemon(pokemonIndex);
+              }}
+            >
               {getFullPokedexNumber(pokemonIndex)} {'   '}
               {pokemon}
             </button>
