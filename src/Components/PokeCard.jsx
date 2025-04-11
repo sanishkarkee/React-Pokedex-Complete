@@ -70,7 +70,7 @@ const PokeCard = (props) => {
 
         //Storedata in the cache,Eg:"cache[1] = {ram} >>> cache={ {a}, {ram}, {c},..}"
         cache[selectedPokemon] = pokemonData;
-        //Push the cache data to localstorage
+        //Push the cache data to localstorage, yesma chai cache ko individual information nabhayera whole cache lai nai localstorage ma save gareko xa, yesari bujda hunxa initially whole cache read garne >> cache ma data store garne >> whole updated cache lai nai localstorage ma save garne
         localStorage.setItem('pokedex', JSON.stringify(cache));
       } catch (err) {
         console.log(err.message);
